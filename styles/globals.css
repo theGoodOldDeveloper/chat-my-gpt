@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .btnLogout {
+    @apply rounded-md bg-rose-500 px-4 py-2 text-white hover:bg-rose-600;
+  }
+
+  .btnSendMessage {
+    @apply rounded-lg bg-emerald-500 px-4 py-2 hover:bg-emerald-600;
+  }
+}
