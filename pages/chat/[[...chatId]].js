@@ -4,13 +4,16 @@ import { streamReader } from "openai-edge-stream";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Message } from "components/Message";
+/* import Image from "next/image"; */
 
 export default function ChatPage() {
   const [incomingMessages, setIncomingMessages] = useState("");
   const [messageText, setMessageText] = useState("");
   const [newChatMessages, setNewChatMessages] = useState([]);
+  const [generatingResponse, setGeneratingResponse] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setGeneratingResponse(true);
     setNewChatMessages((prev) => {
       const newChatMessages = [
         ...prev,
@@ -22,8 +25,8 @@ export default function ChatPage() {
       ];
       return newChatMessages;
     });
-
-    console.log("messageText: ", messageText.content);
+    setMessageText("");
+    /* console.log("messageText: ", messageText.content); */
     const response = await fetch("/api/chat/sendMessage", {
       method: "POST",
       headers: {
@@ -39,20 +42,21 @@ export default function ChatPage() {
     }
     const reader = data.getReader();
     await streamReader(reader, (message) => {
-      console.log("MESSAGE: ", message);
+      /* console.log("MESSAGE: ", message); */
       setIncomingMessages((prev) => `${prev}${message.content}`);
       /* setIncomingMessages((prev) => [...prev, message.content]); */
     });
+    setGeneratingResponse(false);
   };
   return (
     <>
       <Head>
         <title>New chat 😊</title>
       </Head>
-      <div className="grid h-screen grid-cols-[260px_1fr]">
+      <div className="grid h-screen grid-cols-[260px_1fr] ">
         <ChatSidebar />
-        <div className="flex flex-col bg-red-400">
-          <div className="flex-1 ">
+        <div className="flex flex-col overflow-hidden  bg-red-400">
+          <div className="flex-1  overflow-y-scroll">
             {newChatMessages.map((message) => (
               <Message
                 key={message._id}
@@ -67,14 +71,22 @@ export default function ChatPage() {
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>
-              <fieldset className="flex gap-2">
+              <fieldset className="flex gap-2" disabled={generatingResponse}>
                 <textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   className="focus:emerald-500 focus: w-full resize-none rounded-md bg-slate-700 p-2 text-white hover:bg-slate-600"
-                  placeholder=" Send a message: Hello, how are you? 😊"
+                  placeholder={
+                    generatingResponse
+                      ? " I'm working... 😎 "
+                      : "Send a message: Hello, how are you? 😊 "
+                  }
                 />
-                <button className="btnSendMessage" type="submit">
+                <button
+                  className="btnSendMessage"
+                  type="submit"
+                  disabled={generatingResponse}
+                >
                   Send
                 </button>
               </fieldset>
