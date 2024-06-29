@@ -51,7 +51,7 @@ export default function ChatPage() {
     setGeneratingResponse(false);
   };
   return (
-    <div className={styles.container} z-40>
+    <div className={styles.container}>
       <Head>
         <title>New chat 😊</title>
       </Head>
