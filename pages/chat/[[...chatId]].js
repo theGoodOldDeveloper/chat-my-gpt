@@ -4,6 +4,9 @@ import { streamReader } from "openai-edge-stream";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Message } from "components/Message";
+import Image from "next/image";
+import React from "react";
+import styles from "./myStyles.module.css";
 
 export default function ChatPage() {
   const [incomingMessages, setIncomingMessages] = useState("");
@@ -48,14 +51,14 @@ export default function ChatPage() {
     setGeneratingResponse(false);
   };
   return (
-    <>
+    <div className={styles.container} z-40>
       <Head>
         <title>New chat 😊</title>
       </Head>
-      <div className="grid h-screen grid-cols-[260px_1fr] ">
+      <div className="z-10 grid h-screen grid-cols-[260px_1fr]">
         <ChatSidebar />
-        <div className="flex flex-col overflow-hidden  bg-red-400">
-          <div className="flex-1  overflow-y-scroll">
+        <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
+          <div className=" z-30 flex-1 overflow-y-scroll">
             {newChatMessages.map((message) => (
               <Message
                 key={message._id}
@@ -67,6 +70,15 @@ export default function ChatPage() {
             {!!incomingMessages && (
               <Message role="assistant" content={incomingMessages} />
             )}
+            <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
+              <Image
+                src="/background-image.png"
+                width={450}
+                height={450}
+                alt="background"
+                className="  opacity-50"
+              />
+            </div>
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>
@@ -93,6 +105,6 @@ export default function ChatPage() {
           </footer>
         </div>
       </div>
-    </>
+    </div>
   );
 }

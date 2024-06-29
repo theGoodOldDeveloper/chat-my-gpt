@@ -9,13 +9,16 @@ export const Message = ({ role, content }) => {
   /* console.log("USER: ", user.picture); */
   return (
     <div
-      className={`grid grid-cols-[30px_1fr] gap-5 p-5 ${
-        role === "assistant"
-          ? "bg-gay-600"
-          : role === "notice"
-          ? "bg-red-600"
-          : ""
-      }`}
+      className={
+        "z-70 " +
+        `grid grid-cols-[30px_1fr] gap-5 p-5 ${
+          role === "assistant"
+            ? "bg-gay-600"
+            : role === "notice"
+            ? "bg-red-600"
+            : ""
+        }`
+      }
     >
       <div>
         {role === "user" && !!user && (
