@@ -4,7 +4,6 @@ import { streamReader } from "openai-edge-stream";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Message } from "components/Message";
-/* import Image from "next/image"; */
 
 export default function ChatPage() {
   const [incomingMessages, setIncomingMessages] = useState("");
