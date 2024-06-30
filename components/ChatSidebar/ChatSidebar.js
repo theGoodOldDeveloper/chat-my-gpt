@@ -6,7 +6,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+/* import styles from "./myStyles.module.css"; */
+//console.log("styles: ", styles.iconSize);
 export default function ChatSidebar() {
   const [chatList, setChatList] = useState([]);
   useEffect(() => {
@@ -25,14 +26,14 @@ export default function ChatSidebar() {
       <Link className="btnNewChat flex " href="/chat">
         <FontAwesomeIcon icon={faPlus} className="mr-2 p-1" /> New Chat
       </Link>
-      <div className=" flex-1 overflow-auto text-yellow-100">
+      <div className="  flex-1 overflow-auto text-yellow-100">
         {chatList.map((chat) => (
           <Link
             key={chat._id}
             href={`/chat/${chat._id}`}
             className=" flex rounded-md px-4 py-2 hover:bg-slate-600"
           >
-            <FontAwesomeIcon icon={faMessage} className="mr-2 p-1" />{" "}
+            <FontAwesomeIcon icon={faMessage} className=" mr-2 p-1 " />{" "}
             {chat.title}
           </Link>
         ))}
