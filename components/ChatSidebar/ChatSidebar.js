@@ -1,9 +1,36 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function ChatSidebar() {
+  const [chatList, setChatList] = useState([]);
+  useEffect(() => {
+    const loadChatList = async () => {
+      const response = await fetch("/api/chat/getChatList", {
+        method: "POST",
+      });
+      const json = await response.json();
+      console.log("JSON: ", json);
+      setChatList(json?.chats || []);
+    };
+    loadChatList();
+  }, []);
   return (
-    <div className="bg-slate-700">
-      <Link className="btnLogout" href="/api/auth/logout">
+    <div className="flex flex-col overflow-hidden bg-slate-700">
+      <Link className="btnNewChat " href="/chat">
+        New Chat
+      </Link>
+      <div className=" flex-1 overflow-auto text-yellow-100">
+        {chatList.map((chat) => (
+          <Link
+            key={chat._id}
+            href={`/chat/${chat._id}`}
+            className=" flex rounded-md px-4 py-2 hover:bg-slate-600"
+          >
+            {chat.title}
+          </Link>
+        ))}
+      </div>
+      <Link className="btnLogout " href="/api/auth/logout">
         Logout
       </Link>
     </div>

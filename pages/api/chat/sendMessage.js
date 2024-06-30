@@ -6,6 +6,7 @@ export const config = {
 };
 
 export default async function handler(req) {
+  console.log("REQ: ", req);
   try {
     const { message } = await req.json();
     console.log("MESSAGE: ", message);
