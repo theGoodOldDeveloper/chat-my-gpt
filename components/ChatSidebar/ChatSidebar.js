@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 /* import styles from "./myStyles.module.css"; */
 //console.log("styles: ", styles.iconSize);
-export default function ChatSidebar() {
+export default function ChatSidebar({ chatId }) {
   const [chatList, setChatList] = useState([]);
   useEffect(() => {
     const loadChatList = async () => {
@@ -20,7 +20,7 @@ export default function ChatSidebar() {
       setChatList(json?.chats || []);
     };
     loadChatList();
-  }, []);
+  }, [chatId]);
   return (
     <div className="flex flex-col overflow-hidden bg-slate-700">
       <Link className="btnNewChat flex " href="/chat">
@@ -31,7 +31,9 @@ export default function ChatSidebar() {
           <Link
             key={chat._id}
             href={`/chat/${chat._id}`}
-            className=" flex rounded-md px-4 py-2 hover:bg-slate-600"
+            className={`flex rounded-md px-4 py-2 hover:bg-slate-600 ${
+              chatId === chat._id ? "bg-slate-500" : ""
+            }`}
           >
             <FontAwesomeIcon icon={faMessage} className=" mr-2 p-1 " />{" "}
             {chat.title}

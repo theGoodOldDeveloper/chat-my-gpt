@@ -1,18 +1,35 @@
+import { getSession } from "@auth0/nextjs-auth0";
 import ChatSidebar from "components/ChatSidebar/ChatSidebar";
 import Head from "next/head";
 import { streamReader } from "openai-edge-stream";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Message } from "components/Message";
 import Image from "next/image";
 import React from "react";
 import styles from "./myStyles.module.css";
+/* import { useRouter } from "next/router"; */
+import Router from "next/router";
+import { ObjectId } from "mongodb";
+import clientPromise from "lib/mongodb";
 
-export default function ChatPage() {
+export default function ChatPage({ chatId, title, messages }) {
+  console.log("TITLE: ", title);
+  console.log("MESSAGES: ", messages);
+  const [newChatId, setNewChatId] = useState(null);
   const [incomingMessages, setIncomingMessages] = useState("");
   const [messageText, setMessageText] = useState("");
   const [newChatMessages, setNewChatMessages] = useState([]);
   const [generatingResponse, setGeneratingResponse] = useState(false);
+  /* const router = useRouter; */
+  const router = Router;
+  useEffect(() => {
+    if (!generatingResponse && newChatId) {
+      setNewChatId(null);
+      router.push(`/chat/${newChatId}`);
+      /* router.push(`/chat/${newChatId}`); */
+    }
+  }, [newChatId, generatingResponse, router]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneratingResponse(true);
@@ -49,7 +66,12 @@ export default function ChatPage() {
     const reader = data.getReader();
     await streamReader(reader, (message) => {
       console.log("MESSAGE: ", message);
-      setIncomingMessages((prev) => `${prev}${message.content}`);
+      if (message.event === "NewChatId") {
+        setNewChatId(message.content);
+      } else {
+        setIncomingMessages((prev) => `${prev}${message.content}`);
+      }
+      /* setIncomingMessages((prev) => `${prev}${message.content}`); */
       /* setIncomingMessages((prev) => [...prev, message.content]); */
     });
 
@@ -61,7 +83,7 @@ export default function ChatPage() {
         <title>New chat 😊</title>
       </Head>
       <div className="z-10 grid h-screen grid-cols-[260px_1fr]">
-        <ChatSidebar />
+        <ChatSidebar chatId={chatId} />
         <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
           <div className=" z-30 flex-1 overflow-y-scroll">
             {newChatMessages.map((message) => (
@@ -113,6 +135,33 @@ export default function ChatPage() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  const chatId = ctx.params?.chatId?.[0] || null;
+  if (chatId) {
+    const { user } = await getSession(ctx.req, ctx.res);
+    const client = await clientPromise;
+    const db = client.db("ChatGPeter");
+    const chat = await db.collection("chats").findOne({
+      userId: user.sub,
+      _id: new ObjectId(chatId),
+    });
+    return {
+      props: {
+        chatId,
+        title: chat?.title || "Untitled",
+        messages: chat?.messages.map((message) => ({
+          ...message,
+          _id: uuid(),
+        })),
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
 
 //INFO: comment 1
 /* console.log("messageText: ", messageText.content); */
