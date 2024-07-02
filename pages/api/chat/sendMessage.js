@@ -5,32 +5,54 @@ export const config = {
 };
 
 export default async function handler(req) {
-  console.log("REQ: ", req);
+  console.log("REQ: ");
   try {
-    const { message } = await req.json();
+    const { chatId: chatIdFromParam, message } = await req.json();
+    let chatId = chatIdFromParam;
     console.log("MESSAGE: ", message);
     const initialChatMessages = {
       role: "system",
       content:
         "Your name is Chat.G.Peter 😈 theGoodOldDeveloper's assistant💕. Very intelligent and I am a helpful AI assistant. How can I help you today?",
     };
-    //NOTE: insert const respone
 
-    const response = await fetch(
-      `${req.headers.get("origin")}/api/chat/createNewChat`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          cookie: req.headers.get("cookie"),
-        },
-        body: JSON.stringify({
-          message,
-        }),
-      }
-    );
-    const json = await response.json();
-    const chatId = json._id;
+    let newChatId;
+
+    if (chatId) {
+      //add
+      const response = await fetch(
+        `${req.headers.get("origin")}/api/chat/addMessageToChat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            cookie: req.headers.get("cookie"),
+          },
+          body: JSON.stringify({
+            chatId,
+            role: "user",
+            content: message,
+          }),
+        }
+      );
+    } else {
+      const response = await fetch(
+        `${req.headers.get("origin")}/api/chat/createNewChat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            cookie: req.headers.get("cookie"),
+          },
+          body: JSON.stringify({
+            message,
+          }),
+        }
+      );
+      const json = await response.json();
+      chatId = json._id;
+      newChatId = json._id;
+    }
 
     const stream = await OpenAIEdgeStream(
       "https://api.openai.com/v1/chat/completions",
@@ -48,9 +70,10 @@ export default async function handler(req) {
       },
       {
         onBeforeStream: async ({ emit }) => {
-          emit(chatId, "NewChatId");
+          if (newChatId) {
+            emit(chatId, "newChatId");
+          }
         },
-        //INFO: **************************************************************
         onAfterStream: async ({ fullContent }) => {
           await fetch(
             `${req.headers.get("origin")}/api/chat/addMessageToChat`,
@@ -76,7 +99,6 @@ export default async function handler(req) {
   }
 }
 
-//INFO; az emit-tel meg egy ucsoo uzenetet kuldhetunk a stream utaan
 /* 
 onAfterStream: async (emit, fullContent) => {
           console.log("FULL CONTEXT: ", fullContent); 

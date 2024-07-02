@@ -20,6 +20,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const [messageText, setMessageText] = useState("");
   const [newChatMessages, setNewChatMessages] = useState([]);
   const [generatingResponse, setGeneratingResponse] = useState(false);
+  const [fullMessage, setFullMessage] = useState("");
   /* const router = useRouter; */
   const router = Router;
 
@@ -27,6 +28,20 @@ export default function ChatPage({ chatId, title, messages = [] }) {
     setNewChatMessages([]);
     setNewChatId(null);
   }, [chatId]);
+
+  useEffect(() => {
+    if (!generatingResponse && fullMessage) {
+      setNewChatMessages((prev) => [
+        ...prev,
+        {
+          _id: uuid(),
+          role: "assistant",
+          content: fullMessage,
+        },
+      ]);
+      setFullMessage("");
+    }
+  }, [generatingResponse, fullMessage]);
 
   useEffect(() => {
     if (!generatingResponse && newChatId) {
@@ -49,17 +64,15 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       return newChatMessages;
     });
     setMessageText("");
-    //INFO: comment 1
     //console.log("NEW CHAT: ", json);
-    //NOTE: const response move
 
-    //INFO: comment 2
     const response = await fetch("/api/chat/sendMessage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        chatId,
         message: messageText,
       }),
     });
@@ -68,17 +81,19 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       return;
     }
     const reader = data.getReader();
+    let content = "";
     await streamReader(reader, (message) => {
       console.log("MESSAGE: ", message);
       if (message.event === "NewChatId") {
         setNewChatId(message.content);
       } else {
         setIncomingMessages((prev) => `${prev}${message.content}`);
+        content = content + message.content;
       }
       /* setIncomingMessages((prev) => `${prev}${message.content}`); */
       /* setIncomingMessages((prev) => [...prev, message.content]); */
     });
-
+    setFullMessage(content);
     setIncomingMessages("");
     setGeneratingResponse(false);
   };
