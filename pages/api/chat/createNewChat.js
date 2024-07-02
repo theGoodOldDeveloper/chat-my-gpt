@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       messages: [newUserMessages],
       title: message,
     });
-    return { user };
+    /* return { user }; */
   } catch (error) {
     res
       .status(500)
