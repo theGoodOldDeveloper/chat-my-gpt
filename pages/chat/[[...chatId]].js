@@ -13,9 +13,8 @@ import Router from "next/router";
 import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
 
-export default function ChatPage({ chatId, title, messages }) {
-  console.log("TITLE: ", title);
-  console.log("MESSAGES: ", messages);
+export default function ChatPage({ chatId, title, messages = [] }) {
+  console.log("props: ", title, messages);
   const [newChatId, setNewChatId] = useState(null);
   const [incomingMessages, setIncomingMessages] = useState("");
   const [messageText, setMessageText] = useState("");
@@ -23,11 +22,16 @@ export default function ChatPage({ chatId, title, messages }) {
   const [generatingResponse, setGeneratingResponse] = useState(false);
   /* const router = useRouter; */
   const router = Router;
+
+  useEffect(() => {
+    setNewChatMessages([]);
+    setNewChatId(null);
+  }, [chatId]);
+
   useEffect(() => {
     if (!generatingResponse && newChatId) {
       setNewChatId(null);
       router.push(`/chat/${newChatId}`);
-      /* router.push(`/chat/${newChatId}`); */
     }
   }, [newChatId, generatingResponse, router]);
   const handleSubmit = async (e) => {
@@ -75,8 +79,12 @@ export default function ChatPage({ chatId, title, messages }) {
       /* setIncomingMessages((prev) => [...prev, message.content]); */
     });
 
+    setIncomingMessages("");
     setGeneratingResponse(false);
   };
+
+  const allMessages = [...messages, ...newChatMessages];
+
   return (
     <div className={styles.container}>
       <Head>
@@ -86,7 +94,7 @@ export default function ChatPage({ chatId, title, messages }) {
         <ChatSidebar chatId={chatId} />
         <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
           <div className=" z-30 flex-1 overflow-y-scroll">
-            {newChatMessages.map((message) => (
+            {allMessages.map((message) => (
               <Message
                 key={message._id}
                 role={message.role}
@@ -200,3 +208,6 @@ const response = await fetch("/api/chat/createNewChat", {
       setIncomingMessages((prev) => [...prev, message.content]); 
     });
  */
+
+/* import Router from "next/router"; */
+/* const router = Router; */

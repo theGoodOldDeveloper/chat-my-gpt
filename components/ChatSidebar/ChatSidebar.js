@@ -36,7 +36,12 @@ export default function ChatSidebar({ chatId }) {
             }`}
           >
             <FontAwesomeIcon icon={faMessage} className=" mr-2 p-1 " />{" "}
-            {chat.title}
+            <span
+              title={chat.title}
+              className="overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {chat.title}
+            </span>
           </Link>
         ))}
       </div>
