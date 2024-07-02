@@ -21,8 +21,11 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const [newChatMessages, setNewChatMessages] = useState([]);
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [fullMessage, setFullMessage] = useState("");
+  const [originalChatId, setOriginalChatId] = useState(chatId);
   /* const router = useRouter; */
   const router = Router;
+
+  const routeHasChanged = chatId !== originalChatId;
 
   useEffect(() => {
     setNewChatMessages([]);
@@ -30,7 +33,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   }, [chatId]);
 
   useEffect(() => {
-    if (!generatingResponse && fullMessage) {
+    if (!routeHasChanged && !generatingResponse && fullMessage) {
       setNewChatMessages((prev) => [
         ...prev,
         {
@@ -41,7 +44,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       ]);
       setFullMessage("");
     }
-  }, [generatingResponse, fullMessage]);
+  }, [generatingResponse, fullMessage, routeHasChanged]);
 
   useEffect(() => {
     if (!generatingResponse && newChatId) {
@@ -52,6 +55,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneratingResponse(true);
+    setOriginalChatId(chatId);
     setNewChatMessages((prev) => {
       const newChatMessages = [
         ...prev,
@@ -117,8 +121,14 @@ export default function ChatPage({ chatId, title, messages = [] }) {
               />
               /* { <Message key={message._id} {...message} /> } */
             ))}
-            {!!incomingMessages && (
+            {!!incomingMessages && !routeHasChanged && (
               <Message role="assistant" content={incomingMessages} />
+            )}
+            {!!incomingMessages && !!routeHasChanged && (
+              <Message
+                role="notice"
+                content="Only one message at a time. Please allow any other responses to complete before sending another message"
+              />
             )}
             <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
               <Image
