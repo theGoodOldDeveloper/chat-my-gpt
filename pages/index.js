@@ -25,7 +25,7 @@ export default function ChatPage() {
             />
           </div>
           <h1 className=" text-4xl font-bold"> Welcome to Chat G. Peter</h1>
-          <h2 className=" text-2xl text-emerald-200">
+          <h2 className="text-2xl italic text-emerald-200">
             {" "}
             AI Assistant of theGoodOldDeveloper
           </h2>

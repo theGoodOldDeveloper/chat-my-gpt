@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     const { chatId, role, content } = req.body;
     //INFO
-    /* let objectId;
+    let objectId;
 
     try {
       objectId = new ObjectId(chatId);
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    // validate content data
+    //INFO validate content data
     if (
       !content ||
       typeof content !== "string" ||
@@ -40,11 +40,11 @@ export default async function handler(req, res) {
         message: "role must be either 'assistant' or 'user'",
       });
       return;
-    } */
+    }
     //INFO
     const chat = await db.collection("chats").findOneAndUpdate(
       {
-        _id: new ObjectId(chatId), //NOTE: orig code: "ObjectId"
+        _id: objectId, //NOTE: orig code: "ObjectId"
         userId: user.sub,
       },
       {

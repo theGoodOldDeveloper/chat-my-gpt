@@ -8,6 +8,15 @@ export default async function handler(req) {
   console.log("REQ: ");
   try {
     const { chatId: chatIdFromParam, message } = await req.json();
+
+    // validate message data
+    if (!message || typeof message !== "string" || message.length > 200) {
+      return new Response(
+        { message: "Something went wrong... 😒" },
+        { status: 422 }
+      );
+    }
+
     let chatId = chatIdFromParam;
     console.log("MESSAGE: ", message);
     const initialChatMessages = {
@@ -115,7 +124,10 @@ export default async function handler(req) {
     );
     return new Response(stream);
   } catch (error) {
-    console.log("ERROR MESSAGE: ", error);
+    return new Response(
+      { message: "Something went wrong... 😒" },
+      { status: 500 }
+    );
   }
 }
 

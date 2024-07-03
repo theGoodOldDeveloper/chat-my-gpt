@@ -7,6 +7,13 @@ export default async function handler(req, res) {
     console.log("USER (getSession): ", user);
     const { message } = req.body;
     console.log("MESSAGE: ", message);
+
+    // validate message data
+    if (!message || typeof message !== "string" || message.length > 200) {
+      res.status(422).json({ message: "Something went wrong... 😒" });
+      return;
+    }
+
     const newUserMessages = {
       role: "user",
       content: message,
