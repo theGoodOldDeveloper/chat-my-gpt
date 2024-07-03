@@ -1,5 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# GOOGLE FONT 😊 !!!
+
+Before Next.js 13.2.0
+
+You need to add package @next/font yarn add @next/font /or/ npm i @next/font
+After Next.js 13.2.0 (Next.js 13.2.0 and higher)
+
+Next fonts package is included to Next.js by default, so you don't need to install extra package (if you have @next/font installed, remove it) and you need to import from the native package next/font instead of @next/font (without the @)
+
 ## Getting Started
 
 First, run the development server:

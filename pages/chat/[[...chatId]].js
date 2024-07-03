@@ -8,8 +8,8 @@ import { Message } from "components/Message";
 import Image from "next/image";
 import React from "react";
 import styles from "./myStyles.module.css";
-/* import { useRouter } from "next/router"; */
-import Router from "next/router";
+import { useRouter } from "next/router";
+/* import Router from "next/router"; */
 import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
 
@@ -22,8 +22,8 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [fullMessage, setFullMessage] = useState("");
   const [originalChatId, setOriginalChatId] = useState(chatId);
-  /* const router = useRouter; */
-  const router = Router;
+  const router = useRouter();
+  /* const router = Router; */
 
   const routeHasChanged = chatId !== originalChatId;
 
@@ -112,15 +112,17 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       <div className="z-10 grid h-screen grid-cols-[260px_1fr]">
         <ChatSidebar chatId={chatId} />
         <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
-          <div className=" z-30 flex-1 overflow-y-scroll">
-            {allMessages.map((message) => (
-              <Message
-                key={message._id}
-                role={message.role}
-                content={message.content}
-              />
-              /* { <Message key={message._id} {...message} /> } */
-            ))}
+          <div className=" z-30 flex flex-1 flex-col-reverse overflow-y-scroll ">
+            <div className="mb-auto">
+              {allMessages.map((message) => (
+                <Message
+                  key={message._id}
+                  role={message.role}
+                  content={message.content}
+                />
+                /* { <Message key={message._id} {...message} /> } */
+              ))}
+            </div>
             {!!incomingMessages && !routeHasChanged && (
               <Message role="assistant" content={incomingMessages} />
             )}
@@ -130,7 +132,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
                 content="Only one message at a time. Please allow any other responses to complete before sending another message"
               />
             )}
-            <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
+            {/* <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
               <Image
                 src="/background-image.png"
                 width={450}
@@ -138,7 +140,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
                 alt="background"
                 className="  opacity-50"
               />
-            </div>
+            </div> */}
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>
