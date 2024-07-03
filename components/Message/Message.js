@@ -2,7 +2,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { faDragon } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const Message = ({ role, content }) => {
   const { user } = useUser();

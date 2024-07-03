@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 /* import Router from "next/router"; */
 import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDragon } from "@fortawesome/free-solid-svg-icons";
 
 export default function ChatPage({ chatId, title, messages = [] }) {
   console.log("props: ", title, messages);
@@ -87,8 +89,8 @@ export default function ChatPage({ chatId, title, messages = [] }) {
     const reader = data.getReader();
     let content = "";
     await streamReader(reader, (message) => {
-      console.log("MESSAGE: ", message);
-      if (message.event === "NewChatId") {
+      console.log("MESSAGE:😈😁😈 ", message);
+      if (message.event === "newChatId") {
         setNewChatId(message.content);
       } else {
         setIncomingMessages((prev) => `${prev}${message.content}`);
@@ -103,7 +105,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   };
 
   const allMessages = [...messages, ...newChatMessages];
-
+  //BUG: <div className={styles.container}>
   return (
     <div className={styles.container}>
       <Head>
@@ -112,27 +114,53 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       <div className="z-10 grid h-screen grid-cols-[260px_1fr]">
         <ChatSidebar chatId={chatId} />
         <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
-          <div className=" z-30 flex flex-1 flex-col-reverse overflow-y-scroll ">
-            <div className="mb-auto">
-              {allMessages.map((message) => (
-                <Message
-                  key={message._id}
-                  role={message.role}
-                  content={message.content}
-                />
-                /* { <Message key={message._id} {...message} /> } */
-              ))}
-            </div>
-            {!!incomingMessages && !routeHasChanged && (
-              <Message role="assistant" content={incomingMessages} />
+          <div className="  z-30 flex flex-1 flex-col-reverse overflow-y-scroll">
+            {!allMessages.length && !incomingMessages && (
+              <div className="m-auto flex items-center justify-center text-center">
+                <div>
+                  <FontAwesomeIcon
+                    icon={faDragon}
+                    className="text-7xl text-emerald-200"
+                  />
+                  <h1 className="mt-2 text-4xl font-bold text-white/50">
+                    You have a problem...
+                  </h1>
+                  <p className="mt-2 text-base italic  text-white/50">
+                    by theGoodOldDeveloper
+                  </p>
+                  <div className="mt-4 flex  justify-center">
+                    <Image
+                      src="/favicon.png"
+                      width={50}
+                      height={50}
+                      alt="background"
+                      className=" rounded-full  opacity-80 "
+                    />
+                  </div>
+                </div>
+              </div>
             )}
-            {!!incomingMessages && !!routeHasChanged && (
-              <Message
-                role="notice"
-                content="Only one message at a time. Please allow any other responses to complete before sending another message"
-              />
-            )}
-            {/* <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
+            {!!allMessages.length && (
+              <div className="mb-auto">
+                {allMessages.map((message) => (
+                  <Message
+                    key={message._id}
+                    role={message.role}
+                    content={message.content}
+                  />
+                  /* { <Message key={message._id} {...message} /> } */
+                ))}
+
+                {!!incomingMessages && !routeHasChanged && (
+                  <Message role="assistant" content={incomingMessages} />
+                )}
+                {!!incomingMessages && !!routeHasChanged && (
+                  <Message
+                    role="notice"
+                    content="Only one message at a time. Please allow any other responses to complete before sending another message"
+                  />
+                )}
+                {/* <div className="`${styles.backgroundImage}` z-0 flex items-center justify-center">
               <Image
                 src="/background-image.png"
                 width={450}
@@ -141,6 +169,8 @@ export default function ChatPage({ chatId, title, messages = [] }) {
                 className="  opacity-50"
               />
             </div> */}
+              </div>
+            )}
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>

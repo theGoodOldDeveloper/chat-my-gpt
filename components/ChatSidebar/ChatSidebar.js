@@ -35,7 +35,10 @@ export default function ChatSidebar({ chatId }) {
               chatId === chat._id ? "bg-slate-500" : ""
             }`}
           >
-            <FontAwesomeIcon icon={faMessage} className=" mr-2 p-1 " />{" "}
+            <FontAwesomeIcon
+              icon={faMessage}
+              className=" mr-2 p-1 text-white/50"
+            />{" "}
             <span
               title={chat.title}
               className="overflow-hidden text-ellipsis whitespace-nowrap"
