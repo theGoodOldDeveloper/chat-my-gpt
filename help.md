@@ -9,3 +9,7 @@
 }
 
 AUTH0_SECRET=b7899af6d2c881082eddcfd93372dda1ed66efc0835dbdd2256c3fb55c7fef4c
+
+## deploy:
+
+https://www.udemy.com/course/nextjs-chatgpt/learn/lecture/37650700#overview
