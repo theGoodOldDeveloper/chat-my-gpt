@@ -108,14 +108,14 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const allMessages = [...messages, ...newChatMessages];
   //BUG: <div className={styles.container}>
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>New chat 😊</title>
       </Head>
-      <div className="z-10 grid h-screen grid-cols-[260px_1fr]">
+      <div className="flex h-screen sm:grid sm:grid-cols-[260px_1fr]">
         <ChatSidebar chatId={chatId} />
-        <div className="z-20 flex flex-col overflow-hidden  bg-red-400">
-          <div className="  z-30 flex flex-1 flex-col-reverse overflow-y-scroll">
+        <div className="z-20 w-full overflow-hidden bg-red-400 sm:flex  sm:flex-col">
+          <div className="  z-30 flex h-4/5 flex-1 flex-col-reverse overflow-y-scroll">
             {!allMessages.length && !incomingMessages && (
               <div className="m-auto flex items-center justify-center text-center">
                 <div>
@@ -175,7 +175,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>
-              <fieldset className="flex gap-2" disabled={generatingResponse}>
+              <fieldset className="gap-2 sm:flex" disabled={generatingResponse}>
                 <textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
@@ -186,19 +186,21 @@ export default function ChatPage({ chatId, title, messages = [] }) {
                       : "Send a message: Hello, how are you? 😊 "
                   }
                 />
-                <button
-                  className="btnSendMessage"
-                  type="submit"
-                  disabled={generatingResponse}
-                >
-                  Send
-                </button>
+                <div className="m-auto flex  justify-center">
+                  <button
+                    className="btnSendMessage"
+                    type="submit"
+                    disabled={generatingResponse}
+                  >
+                    Send
+                  </button>
+                </div>
               </fieldset>
             </form>
           </footer>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

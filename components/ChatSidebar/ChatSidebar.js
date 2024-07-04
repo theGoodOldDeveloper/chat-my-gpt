@@ -22,7 +22,7 @@ export default function ChatSidebar({ chatId }) {
     loadChatList();
   }, [chatId]);
   return (
-    <div className="flex flex-col overflow-hidden bg-slate-700">
+    <div className="hidden flex-col overflow-hidden bg-slate-700 sm:flex">
       <Link className="btnNewChat flex " href="/chat">
         <FontAwesomeIcon icon={faPlus} className="mr-2 p-1" /> New Chat
       </Link>
