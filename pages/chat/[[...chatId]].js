@@ -112,9 +112,9 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       <Head>
         <title>New chat 😊</title>
       </Head>
-      <div className="flex h-screen sm:grid sm:grid-cols-[260px_1fr]">
+      <div className="flex h-screen md:grid md:grid-cols-[260px_1fr]">
         <ChatSidebar chatId={chatId} />
-        <div className="z-20 w-full overflow-hidden bg-red-400 sm:flex  sm:flex-col">
+        <div className="z-20 w-full overflow-hidden bg-red-400 md:flex  md:flex-col">
           <div className="  z-30 flex h-4/5 flex-1 flex-col-reverse overflow-y-scroll">
             {!allMessages.length && !incomingMessages && (
               <div className="m-auto flex items-center justify-center text-center">
@@ -175,7 +175,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
           </div>
           <footer className="  bg-red-500 p-7">
             <form onSubmit={handleSubmit}>
-              <fieldset className="gap-2 sm:flex" disabled={generatingResponse}>
+              <fieldset className="gap-2 md:flex" disabled={generatingResponse}>
                 <textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
