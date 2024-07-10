@@ -143,7 +143,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
             </button>
           </div>
           {/* hamburger menu */}
-          <div className="  z-30 flex h-3/4 flex-1 flex-col-reverse overflow-y-scroll">
+          <div className="  z-30 flex h-4/6 flex-1 flex-col-reverse overflow-y-scroll">
             {!allMessages.length && !incomingMessages && (
               <div className="m-auto flex items-center justify-center text-center">
                 <div>
