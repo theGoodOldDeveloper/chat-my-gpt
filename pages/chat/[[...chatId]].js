@@ -14,6 +14,8 @@ import { ObjectId } from "mongodb";
 import clientPromise from "lib/mongodb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDragon } from "@fortawesome/free-solid-svg-icons";
+import { faHamburger } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 import { redirect } from "next/dist/server/api-utils";
 
 export default function ChatPage({ chatId, title, messages = [] }) {
@@ -27,6 +29,8 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const [originalChatId, setOriginalChatId] = useState(chatId);
   const router = useRouter();
   /* const router = Router; */
+  const [sidebarVisible, setSidebarVisible] = useState("hidden");
+  const [hamburgerIcon, setHamburgerIcon] = useState(faHamburger); //&#88;
 
   const routeHasChanged = chatId !== originalChatId;
 
@@ -112,10 +116,34 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       <Head>
         <title>New chat 😊</title>
       </Head>
+
       <div className="flex h-screen md:grid md:grid-cols-[260px_1fr]">
-        <ChatSidebar chatId={chatId} />
+        <ChatSidebar chatId={chatId} sidebarVisible={sidebarVisible} />
+
         <div className="z-20 w-full overflow-hidden bg-red-400 md:flex  md:flex-col">
-          <div className="  z-30 flex h-4/5 flex-1 flex-col-reverse overflow-y-scroll">
+          {/* //NOTE hamburger menu */}
+          <div className="flex justify-end">
+            <button
+              id="mobile-open-button"
+              class=" sm:hidden"
+              onClick={() => {
+                setSidebarVisible((prev) =>
+                  prev === "hidden" ? "" : "hidden"
+                );
+                setHamburgerIcon((prev) =>
+                  prev === faHamburger ? faX : faHamburger
+                );
+              }}
+              /* class="text-3xl focus:outline-none sm:hidden" */
+            >
+              <FontAwesomeIcon
+                icon={hamburgerIcon}
+                className="p-2  text-4xl text-emerald-200"
+              />
+            </button>
+          </div>
+          {/* hamburger menu */}
+          <div className="  z-30 flex h-3/4 flex-1 flex-col-reverse overflow-y-scroll">
             {!allMessages.length && !incomingMessages && (
               <div className="m-auto flex items-center justify-center text-center">
                 <div>
