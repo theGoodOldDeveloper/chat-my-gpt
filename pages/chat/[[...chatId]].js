@@ -125,7 +125,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
           <div className="flex justify-end">
             <button
               id="mobile-open-button"
-              class=" sm:hidden"
+              class=" md:hidden"
               onClick={() => {
                 setSidebarVisible((prev) =>
                   prev === "hidden" ? "" : "hidden"
@@ -134,7 +134,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
                   prev === faHamburger ? faX : faHamburger
                 );
               }}
-              /* class="text-3xl focus:outline-none sm:hidden" */
+              /* class="text-3xl focus:outline-none md:hidden" */
             >
               <FontAwesomeIcon
                 icon={hamburgerIcon}
