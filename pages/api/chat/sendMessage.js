@@ -92,7 +92,7 @@ export default async function handler(req) {
         },
         method: "POST",
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-4o-mini",
           messages: [initialChatMessages, ...messageToInclude],
           stream: true,
         }),
